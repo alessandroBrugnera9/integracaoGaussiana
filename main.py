@@ -1,3 +1,5 @@
+from typing import Callable
+from unittest import result
 import numpy as np
 from numpy import float64
 from pyparsing import line
@@ -15,8 +17,8 @@ def createCoefficientsArray():
         weights[i-3] = float64(numbers[1])
 
     np.save('data/nodes6.npy', nodes)
-    np.save('data/weights6.npy', nodes)
-    
+    np.save('data/weights6.npy', weights)
+
     nodes = np.zeros(4)
     weights = np.zeros(4)
 
@@ -26,7 +28,7 @@ def createCoefficientsArray():
         weights[i-11] = float64(numbers[1])
 
     np.save('data/nodes8.npy', nodes)
-    np.save('data/weights8.npy', nodes)
+    np.save('data/weights8.npy', weights)
 
     nodes = np.zeros(5)
     weights = np.zeros(5)
@@ -37,22 +39,34 @@ def createCoefficientsArray():
         weights[i-20] = float64(numbers[1])
 
     np.save('data/nodes10.npy', nodes)
-    np.save('data/weights10.npy', nodes)
+    np.save('data/weights10.npy', weights)
 
-    
+
 def getCoefficients(n: int):
     nodes = np.load('data/nodes{}.npy'.format(n))
     weights = np.load('data/weights{}.npy'.format(n))
 
-    return(nodes,weights)
-def integrateGauss(n: int, mathematicalFunction) -> float64:
-    nodes, weights = readCoefficients(n)
+    return(nodes, weights)
+
+
+def integrateGauss(n: int, mathematicalFunction: Callable[[float64],float64]) -> float64:
+    nodes, weights = getCoefficients(n)
+
+    result = float64(0)
+    for i in range(len(nodes)):
+        result += weights[i]*mathematicalFunction(nodes[i])
+        result += weights[i]*mathematicalFunction(-nodes[i])
 
     return result
 
+def example1(x: float64) -> float64:
+    fx = 2*x+1
+    return fx
+
 
 def main():
-    print(getCoefficients(10))
-
+    print(integrateGauss(6,example1))
+    print(integrateGauss(10,example1))
+    print(integrateGauss(8,example1))
 
 main()
