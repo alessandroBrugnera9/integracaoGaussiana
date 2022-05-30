@@ -49,15 +49,31 @@ def getCoefficients(n: int):
     return(nodes, weights)
 
 
-def integrateGauss(n: int, mathematicalFunction: Callable[[float64],float64]) -> float64:
+def integrateGauss(n: int, a: float64, b: float64, mathematicalFunction: Callable[[float64], float64]) -> float64:
+    """
+    calculate gauss quadratire using n elments from a to b of the function provided
+
+    :param int n: number of coefficients for Gauss Quadrature
+    :param float64 a: lower limit from the integral
+    :param float64 b: upper limit from the integral
+    :param function mathematicalFunction: mathematical function of the function to be integrated
+    """
     nodes, weights = getCoefficients(n)
 
     result = float64(0)
+    # calculate parts of gauss quadrature and applyting compensation for different limits
     for i in range(len(nodes)):
-        result += weights[i]*mathematicalFunction(nodes[i])
-        result += weights[i]*mathematicalFunction(-nodes[i])
+        result += weights[i]*mathematicalFunction(
+            (b-a)/2*nodes[i]
+            + (b+a)/2)
+        result += weights[i]*mathematicalFunction(
+            -(b-a)/2*nodes[i]
+            + (b+a)/2)
+
+    result *= (b-a)/2
 
     return result
+
 
 def example1(x: float64) -> float64:
     fx = 2*x+1
@@ -65,8 +81,9 @@ def example1(x: float64) -> float64:
 
 
 def main():
-    print(integrateGauss(6,example1))
-    print(integrateGauss(10,example1))
-    print(integrateGauss(8,example1))
+    print(integrateGauss(6, 10,20 ,example1))
+    print(integrateGauss(8, 10,20 ,example1))
+    print(integrateGauss(10, 10,20 ,example1))
+
 
 main()
