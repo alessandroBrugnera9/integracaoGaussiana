@@ -77,7 +77,6 @@ def integrateGauss(n: int, a: float64, b: float64, fixedVariable: float64, mathe
 
     result *= (b-a)/2
 
-    print(result)
     return result
 
 
@@ -120,8 +119,6 @@ def doubleIntegral(n: int, a: float64, b: float64,  c: Callable[[float64], float
 
     result *= (b-a)/2
 
-    print(result)
-
     return result
 
 
@@ -130,24 +127,30 @@ def example1(x: float64) -> float64:
     return fx
 
 
-def test1(x: float64, y: float64) -> float64:
-    fxy = 1-x-y
-    return fxy
+def example1(n: int) -> float64:
+    return doubleIntegral(
+        n,
+        0,
+        1,
+        lambda x: 0,
+        lambda x: 1-x,
+        lambda x,y: (1-x-y)
+    )
 
 
-def main():
-    # print(integrateGauss(6, 10, 20, example1))
-    # print(integrateGauss(8, 10, 20, example1))
-    # print(integrateGauss(10, 10, 20, example1))
-
-    doubleIntegral(
+def example2(n: int) -> float64:
+    return doubleIntegral(
         6,
         0,
         1,
         lambda x: 0,
         lambda x: 1-x,
-        test1
+        lambda x, y: (1-x-y)
     )
 
 
+def main():
+    print(example1(6))
+    print(example1(8))
+    print(example1(10))
 main()
