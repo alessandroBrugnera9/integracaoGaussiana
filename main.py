@@ -140,7 +140,7 @@ def example1(n: int) -> float64:
 
 def example21(n: int) -> float64:
     return doubleIntegral(
-        6,
+        n,
         0,
         1,
         lambda x: 0,
@@ -148,9 +148,22 @@ def example21(n: int) -> float64:
         lambda x, y: 1
     )
 
+def example22(n: int) -> float64:
+    return doubleIntegral(
+        n,
+        0,
+        1,
+        lambda y: 0,
+        lambda y: np.sqrt(1-y),
+        lambda y, x: 1
+    )
+
 
 def main():
     print(example21(6))
     print(example21(8))
     print(example21(10))
+    print(example22(6))
+    print(example22(8))
+    print(example22(10))
 main()
