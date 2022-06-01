@@ -181,11 +181,20 @@ def example32(n: int) -> float64:
 def example41(n: int) -> float64:
     return doubleIntegral(
         n,
-        0.75,
+        (1-1/4),
         1,
         lambda y: 0,
         lambda y: np.sqrt(1-y**2),
-        lambda y, x: np.sqrt(x**2+y**2),
+        lambda y, x: 2*np.pi*x,
+    )
+def example41(n: int) -> float64:
+    return doubleIntegral(
+        n,
+        3/4,
+        1,
+        lambda y: 0,
+        lambda y: np.sqrt(1-y**2),
+        lambda y, x: 2*np.pi*x,
     )
 
 def example32(n: int) -> float64:
@@ -199,7 +208,7 @@ def example32(n: int) -> float64:
     )
 
 def volumeSphericalCap(r,h):
-    v=(np.pi*h/6)*(3*r**2+h**2)
+    v=(np.pi*h**2/3)*(3*r-h)
     return v
 
 def main():
