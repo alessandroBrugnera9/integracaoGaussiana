@@ -122,12 +122,17 @@ def doubleIntegral(n: int, a: float64, b: float64,  c: Callable[[float64], float
     return result
 
 
-def example1(x: float64) -> float64:
-    fx = 2*x+1
-    return fx
+def example11(n: int) -> float64:
+    return doubleIntegral(
+        n,
+        0,
+        1,
+        lambda x: 0,
+        lambda x: 1,
+        lambda x,y: (1)
+    )
 
-
-def example1(n: int) -> float64:
+def example12(n: int) -> float64:
     return doubleIntegral(
         n,
         0,
@@ -187,24 +192,15 @@ def example41(n: int) -> float64:
         lambda y: np.sqrt(1-y**2),
         lambda y, x: 2*np.pi*x,
     )
-def example41(n: int) -> float64:
+
+def example42(n: int) -> float64:
     return doubleIntegral(
         n,
-        3/4,
+        -1,
         1,
         lambda y: 0,
-        lambda y: np.sqrt(1-y**2),
+        lambda y: np.exp(-(y**2)),
         lambda y, x: 2*np.pi*x,
-    )
-
-def example32(n: int) -> float64:
-    return doubleIntegral(
-        n,
-        0.1,
-        0.5,
-        lambda x: x**3,
-        lambda x: x**2,
-        lambda x,y: np.exp(y/x),
     )
 
 def volumeSphericalCap(r,h):
@@ -212,11 +208,65 @@ def volumeSphericalCap(r,h):
     return v
 
 def main():
-    print(volumeSphericalCap(1, 1/4))
+    print("Gauss Quadrature Analysis for double integral")
+    ("Printing information about the examples finishing with the Gauss Quadrature approximation of n=6, n=8 and n=10 respectively.\n")
+
+    print("\n")
+    print("Example 1-1: ")
+    print("Volume of cube with edge 1: ")
+    print("Exact value: 1")
+    print(example11(6))
+    print(example11(8))
+    print(example11(10))
+    
+    print("\n")
+    print("Example 1-2: ")
+    print("Volume of tetrahedron with points: (0,0,0), (1,0,0), (0,1,0), (0,0,1)")
+    print("Exact value: 1/6 or 1.666666")
+    print(example12(6))
+    print(example12(8))
+    print(example12(10))
+    
+    print("\n")
+    print("Example 2: ")
+    print("Comparison from double integral using dxdy or dydx integrations")
+    print("Exact value: 2/3 or 0.6666667")
+    print("dydx:")
+    print(example21(6))
+    print(example21(8))
+    print(example21(10))
+    print("dxdy:")
+    print(example22(6))
+    print(example22(8))
+    print(example22(10))
+    
+    print("\n")
+    print("Example 3-1: ")
+    print("Volume below surface z=e^(y/x), delimited by 0.1<x<0.5 and x^3<y<x^2")
+    print(example31(6))
+    print(example31(8))
+    print(example31(10))
+    
+    print("\n")
+    print("Example 3-2: ")
+    print("Area of surface z=e^(y/x), delimited by 0.1<x<0.5 and x^3<y<x^2")
+    print(example42(6))
+    print(example42(8))
+    print(example42(10))
+
+    print("\n")
+    print("Example 4-1: ")
+    print("Volume of Spherical Cap with h=1/4 and r=1")
+    print("Exact Value: ", volumeSphericalCap(1, 1/4))
     print(example41(6))
     print(example41(8))
     print(example41(10))
-    print(example32(6))
-    print(example32(8))
-    print(example32(10))
+    
+    print("Example 4-2: ")
+    print("Volume of revolution solid on y axis  of region 0<x<e^(-y^2) and -1<y<1")
+    print(example42(6))
+    print(example42(8))
+    print(example42(10))
+    
+createCoefficientsArray()
 main()
