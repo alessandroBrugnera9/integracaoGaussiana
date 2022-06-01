@@ -159,11 +159,22 @@ def example22(n: int) -> float64:
     )
 
 
+def example32(n: int) -> float64:
+    return doubleIntegral(
+        n,
+        0.1,
+        0.5,
+        lambda x: x**3,
+        lambda x: x**2,
+        lambda x,y: np.exp(y/x),
+    )
+
+
 def main():
     print(example21(6))
     print(example21(8))
     print(example21(10))
-    print(example22(6))
-    print(example22(8))
-    print(example22(10))
+    print(example32(6))
+    print(example32(8))
+    print(example32(10))
 main()
