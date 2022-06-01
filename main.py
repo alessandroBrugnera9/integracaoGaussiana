@@ -138,19 +138,19 @@ def example1(n: int) -> float64:
     )
 
 
-def example2(n: int) -> float64:
+def example21(n: int) -> float64:
     return doubleIntegral(
         6,
         0,
         1,
         lambda x: 0,
-        lambda x: 1-x,
-        lambda x, y: (1-x-y)
+        lambda x: 1-x**2,
+        lambda x, y: 1
     )
 
 
 def main():
-    print(example1(6))
-    print(example1(8))
-    print(example1(10))
+    print(example21(6))
+    print(example21(8))
+    print(example21(10))
 main()
