@@ -49,7 +49,7 @@ def getCoefficients(n: int):
     return(nodes, weights)
 
 
-def integrateGauss(n: int, a: float64, b: float64, mathematicalFunction: Callable[[float64], float64]) -> float64:
+def integrateGauss(n: int, a: float64, b: float64, x: float64, mathematicalFunction: Callable[[float64, float64], float64]) -> float64:
     """
     calculate gauss quadratire using n elments from a to b of the function provided
 
@@ -63,14 +63,51 @@ def integrateGauss(n: int, a: float64, b: float64, mathematicalFunction: Callabl
     result = float64(0)
     # calculate parts of gauss quadrature and applyting compensation for different limits
     for i in range(len(nodes)):
+        node = ((b-a)/2*nodes[i]
+                + (b+a)/2)
         result += weights[i]*mathematicalFunction(
-            (b-a)/2*nodes[i]
-            + (b+a)/2)
+            x,
+            node)
+        node = (-(b-a)/2*nodes[i]
+                + (b+a)/2)
         result += weights[i]*mathematicalFunction(
-            -(b-a)/2*nodes[i]
-            + (b+a)/2)
+            x,
+            node)
 
     result *= (b-a)/2
+
+    print(result)
+    return result
+
+
+def doubleIntegral(n: int, a: float64, b: float64,  cx: Callable[[float64], float64], dx: Callable[[float64], float64], mathematicalFunction: Callable[[float64, float64], float64]) -> float64:
+    nodes, weights = getCoefficients(n)
+
+    result = float64(0)
+    # calculate parts of gauss quadrature and applyting compensation for different limits
+    for i in range(len(nodes)):
+        node = ((b-a)/2*nodes[i]
+                + (b+a)/2)
+        result += weights[i]*integrateGauss(
+            n,
+            cx(node),
+            dx(node),
+            node,
+            mathematicalFunction
+        )
+        node = (-(b-a)/2*nodes[i]
+                + (b+a)/2)
+        result += weights[i]*integrateGauss(
+            n,
+            cx(node),
+            dx(node),
+            node,
+            mathematicalFunction
+        )
+
+    result *= (b-a)/2
+
+    print(result)
 
     return result
 
@@ -80,10 +117,24 @@ def example1(x: float64) -> float64:
     return fx
 
 
+def test1(x: float64, y: float64) -> float64:
+    fxy = 1-x-y
+    return fxy
+
+
 def main():
-    print(integrateGauss(6, 10,20 ,example1))
-    print(integrateGauss(8, 10,20 ,example1))
-    print(integrateGauss(10, 10,20 ,example1))
+    # print(integrateGauss(6, 10, 20, example1))
+    # print(integrateGauss(8, 10, 20, example1))
+    # print(integrateGauss(10, 10, 20, example1))
+
+    doubleIntegral(
+        6,
+        0,
+        1,
+        lambda x: 0,
+        lambda x: 1-x,
+        test1
+    )
 
 
 main()
