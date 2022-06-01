@@ -49,14 +49,15 @@ def getCoefficients(n: int):
     return(nodes, weights)
 
 
-def integrateGauss(n: int, a: float64, b: float64, x: float64, mathematicalFunction: Callable[[float64, float64], float64]) -> float64:
+def integrateGauss(n: int, a: float64, b: float64, fixedVariable: float64, mathematicalFunction: Callable[[float64, float64], float64]) -> float64:
     """
     calculate gauss quadratire using n elments from a to b of the function provided
 
     :param int n: number of coefficients for Gauss Quadrature
     :param float64 a: lower limit from the integral
     :param float64 b: upper limit from the integral
-    :param function mathematicalFunction: mathematical function of the function to be integrated
+    :param float64 fixedVariable: fixed variable when integrating, when calculating double integral iteratively
+    :param function mathematicalFunction: mathematical function to be integrated, the 1st arg is the fixed, 2nd is the node
     """
     nodes, weights = getCoefficients(n)
 
@@ -66,12 +67,12 @@ def integrateGauss(n: int, a: float64, b: float64, x: float64, mathematicalFunct
         node = ((b-a)/2*nodes[i]
                 + (b+a)/2)
         result += weights[i]*mathematicalFunction(
-            x,
+            fixedVariable,
             node)
         node = (-(b-a)/2*nodes[i]
                 + (b+a)/2)
         result += weights[i]*mathematicalFunction(
-            x,
+            fixedVariable,
             node)
 
     result *= (b-a)/2
@@ -80,7 +81,19 @@ def integrateGauss(n: int, a: float64, b: float64, x: float64, mathematicalFunct
     return result
 
 
-def doubleIntegral(n: int, a: float64, b: float64,  cx: Callable[[float64], float64], dx: Callable[[float64], float64], mathematicalFunction: Callable[[float64, float64], float64]) -> float64:
+def doubleIntegral(n: int, a: float64, b: float64,  c: Callable[[float64], float64], d: Callable[[float64], float64],mathematicalFunction: Callable[[float64, float64], float64]) -> float64:
+    """
+    calculate double integral iteratively using gauss quadratire, using n elments
+    from a to b of the external integral, and c to d of the internal integral (these lmits can be dependent on the external variable(node))
+
+    :param int n: number of coefficients for Gauss Quadrature
+    :param float64 a: lower limit from the external integral 
+    :param float64 b: upper limit from the external ntegral
+    :param function c: upper limit from the internal integral, should be callable even when constant
+    :param function d: upper limit from the internal integral, should be callable even when constant
+    :param float64 fixedVariable: fixed variable when integrating, when calculating double integral iteratively
+    :param function mathematicalFunction: mathematical function to be integrated, the 1st arg is the fixed, 2nd is the node
+    """
     nodes, weights = getCoefficients(n)
 
     result = float64(0)
@@ -90,8 +103,8 @@ def doubleIntegral(n: int, a: float64, b: float64,  cx: Callable[[float64], floa
                 + (b+a)/2)
         result += weights[i]*integrateGauss(
             n,
-            cx(node),
-            dx(node),
+            c(node),
+            d(node),
             node,
             mathematicalFunction
         )
@@ -99,8 +112,8 @@ def doubleIntegral(n: int, a: float64, b: float64,  cx: Callable[[float64], floa
                 + (b+a)/2)
         result += weights[i]*integrateGauss(
             n,
-            cx(node),
-            dx(node),
+            c(node),
+            d(node),
             node,
             mathematicalFunction
         )
