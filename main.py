@@ -1,3 +1,4 @@
+import os
 from typing import Callable
 from unittest import result
 import numpy as np
@@ -16,6 +17,11 @@ def createCoefficientsArray():
         nodes[i-3] = float64(numbers[0])
         weights[i-3] = float64(numbers[1])
 
+    try:
+        os.mkdir('data')
+    except:
+        print("folder data already created")
+    
     np.save('data/nodes6.npy', nodes)
     np.save('data/weights6.npy', weights)
 
@@ -242,14 +248,14 @@ def main():
     
     print("\n")
     print("Exemplo 3-1: ")
-    print("Volume abaixo da superficie z=e^(y/x), delimitado por 0.1<x<0.5 e x^3<y<x^2")
+    print("Area da superficie z=e^(y/x), delimitado por 0.1<x<0.5 e x^3<y<x^2")
     print(example31(6))
     print(example31(8))
     print(example31(10))
     
     print("\n")
     print("Exemplo 3-2: ")
-    print("Area da superficie z=e^(y/x), delimitado por 0.1<x<0.5 e x^3<y<x^2")
+    print("Volume abaixo da superficie z=e^(y/x), delimitado por 0.1<x<0.5 e x^3<y<x^2")
     print(example42(6))
     print(example42(8))
     print(example42(10))
